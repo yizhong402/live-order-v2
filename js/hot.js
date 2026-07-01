@@ -32,7 +32,7 @@ async function loadHotSales() {
     const cache = Storage.get('hot_sales_cache');
     let lastOrderId = 0;
 
-    if (cache && cache.data) {
+    if (cache && Array.isArray(cache.data)) {
       hotSalesData = cache.data;
       lastOrderId = cache.last_max_order_id || 0;
     }
