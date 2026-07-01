@@ -361,7 +361,7 @@ async function saveOrder() {
       await updateRound(newRound);
       document.getElementById('orderCurrentRound').textContent = newRound;
     }
-AppState.clearCurrentSkus();
+clearCurrentSkus();
     document.getElementById('auctionPrice').value = '';
     document.getElementById('orderNote').value = '';
     document.getElementById('scanInput').focus();
