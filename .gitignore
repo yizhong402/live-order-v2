@@ -1,0 +1,28 @@
+# === 敏感文件 ===
+.env
+.env.*
+oms_token_cache.json
+baas-config.json
+*token*.json
+*secret*.json
+*credential*.json
+
+# === 系统文件 ===
+.DS_Store
+Thumbs.db
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+
+# === IDE ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# === 临时文件 ===
+/tmp/
+temp/
+*.log

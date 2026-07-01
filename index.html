@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>直播订单管理系统 V2</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header id="topNav">
+  <div class="nav-brand" onclick="navigateTo('home')">📡 直播订单管理系统 V2</div>
+  <nav id="navTabs">
+    <button data-section="home" class="nav-tab active">🏠 首页</button>
+    <button data-section="order" class="nav-tab">📝 订单录入</button>
+    <button data-section="products" class="nav-tab">📦 商品管理</button>
+    <button data-section="combo" class="nav-tab">🔗 组合SKU</button>
+    <button data-section="hot" class="nav-tab">🔥 热卖排行</button>
+    <button data-section="arrival" class="nav-tab">🆕 新上架</button>
+    <button data-section="history" class="nav-tab">📜 历史记录</button>
+    <button data-section="profit" class="nav-tab">💰 毛利计算</button>
+    <button data-section="settings" class="nav-tab">⚙️ 系统设置</button>
+  </nav>
+  <div class="nav-right">
+    <span id="warehouseLabel">仓库</span>
+    <span id="connectionStatus" class="status-dot online" title="BaaS 连接状态"></span>
+    <button id="mobileMenuBtn" class="hamburger" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</header>
+
+<main id="mainContent">
+  <!-- 首页 -->
+  <section id="section-home" class="page-section active"></section>
+  <!-- 订单录入 -->
+  <section id="section-order" class="page-section"></section>
+  <!-- 商品管理 -->
+  <section id="section-products" class="page-section"></section>
+  <!-- 组合SKU -->
+  <section id="section-combo" class="page-section"></section>
+  <!-- 热卖排行 -->
+  <section id="section-hot" class="page-section"></section>
+  <!-- 新上架 -->
+  <section id="section-arrival" class="page-section"></section>
+  <!-- 历史记录 -->
+  <section id="section-history" class="page-section"></section>
+  <!-- 毛利计算 -->
+  <section id="section-profit" class="page-section"></section>
+  <!-- 系统设置 -->
+  <section id="section-settings" class="page-section"></section>
+</main>
+
+<!-- Toast 容器 -->
+<div id="toastContainer"></div>
+
+<!-- Modal 容器 -->
+<div id="modalOverlay" class="modal-overlay hidden" onclick="closeModal()">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span id="modalTitle"></span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<!-- 图片 Lightbox -->
+<div id="lightbox" class="lightbox hidden" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="商品图片">
+</div>
+
+<script src="js/utils.js"></script>
+<script src="js/baas.js"></script>
+<script src="js/oms.js"></script>
+<script src="js/app.js"></script>
+<script src="js/session.js"></script>
+<script src="js/order.js"></script>
+<script src="js/product.js"></script>
+<script src="js/combo.js"></script>
+<script src="js/hot.js"></script>
+<script src="js/arrival.js"></script>
+<script src="js/history.js"></script>
+<script src="js/profit.js"></script>
+<script src="js/settings.js"></script>
+</body>
+</html>
