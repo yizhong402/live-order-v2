@@ -19,26 +19,20 @@ const BaaS = {
     }
   },
 
-  _buildURL(params) {
-    const url = new URL(this.baseURL);
-    Object.keys(params).forEach(k => {
-      if (params[k] !== null && params[k] !== undefined) {
-        url.searchParams.append(k, params[k]);
-      }
-    });
-    return url.toString();
-  },
-
   async _request(body) {
     try {
-      // BaaS: list/get 使用 GET + query params (参考 V1 格式)
-      const isGet = body.method === 'list' || body.method === 'get';
-      const url = this._buildURL(body);
-      const fetchOpts = { method: isGet ? 'GET' : 'POST', headers: this.headers };
-      if (!isGet) {
-        fetchOpts.body = JSON.stringify(body);
-      }
-      const res = await fetch(url, fetchOpts);
+      // BaaS 统一使用 POST + URL query params
+      const url = new URL(this.baseURL);
+      Object.keys(body).forEach(k => {
+        if (body[k] !== null && body[k] !== undefined) {
+          url.searchParams.append(k, body[k]);
+        }
+      });
+      const res = await fetch(url.toString(), {
+        method: 'POST',
+        headers: this.headers,
+        body: '{}'
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
     } catch (e) {
