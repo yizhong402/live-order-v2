@@ -21,17 +21,23 @@ const BaaS = {
 
   async _request(body) {
     try {
-      // BaaS 统一使用 POST + URL query params
+      // BaaS: 标量参数→URL query，对象/数组参数→POST body
       const url = new URL(this.baseURL);
+      const postBody = {};
       Object.keys(body).forEach(k => {
-        if (body[k] !== null && body[k] !== undefined) {
-          url.searchParams.append(k, body[k]);
+        const v = body[k];
+        if (v !== null && v !== undefined) {
+          if (typeof v === 'object') {
+            postBody[k] = v;
+          } else {
+            url.searchParams.append(k, v);
+          }
         }
       });
       const res = await fetch(url.toString(), {
         method: 'POST',
         headers: this.headers,
-        body: '{}'
+        body: JSON.stringify(Object.keys(postBody).length > 0 ? postBody : {})
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
