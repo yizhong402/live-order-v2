@@ -1,14 +1,10 @@
 /* ===== baas.js — BaaS 客户端统一封装 ===== */
 const BaaS = {
   baseURL: 'https://baas.kuafuai.net/baas-api/api/data/invoke',
-  headers: { 'Content-Type': 'application/json' },
+  headers: { 'Content-Type': 'application/json', 'CODE_FLYING': 'baas_CJbcgwuf' },
 
   // 初始化：从设置加载 CODE_FLYING
   async init() {
-    // 默认配置（确保 BaaS 可用）
-    if (!this.headers['CODE_FLYING']) {
-      this.headers['CODE_FLYING'] = 'baas_CJbcgwuf';
-    }
     try {
       const settings = await this.list('settings');
       if (settings && settings.length) {
@@ -19,7 +15,7 @@ const BaaS = {
         });
       }
     } catch (e) {
-      console.warn('BaaS init: 未能从设置加载 CODE_FLYING，使用默认配置');
+      console.warn('BaaS init: 未能从设置加载 CODE_FLYING（使用默认）');
     }
   },
 
