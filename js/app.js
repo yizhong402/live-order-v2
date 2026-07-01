@@ -167,7 +167,7 @@ function renderStockOverview(products) {
 function renderActiveSessions(sessions) {
   const container = document.getElementById('homeActiveSessions');
   if (!sessions || sessions.length === 0) {
-    container.innerHTML = '<div class="card-header">🎬 活跃场次</div><div class="empty-state"><div class="empty-icon">📭</div><p>暂无活跃场次</p><p style="font-size:0.8rem;"><a href="#order" onclick="navigateTo('order')">去创建场次 →</a></p></div>';
+    container.innerHTML = '<div class="card-header">🎬 活跃场次</div><div class="empty-state"><div class="empty-icon">📭</div><p>暂无活跃场次</p><p style="font-size:0.8rem;"><a href="#order" onclick="navigateTo(\'order\')">去创建场次 →</a></p></div>';
     return;
   }
 

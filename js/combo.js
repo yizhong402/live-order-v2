@@ -126,7 +126,7 @@ function showComboModal(id) {
           renderComboSKUSelector(skus);
         } catch (e) {}
       }
-    }).catch(() => {});
+    }).then(null, () => {});
   }
 
   const body = `
