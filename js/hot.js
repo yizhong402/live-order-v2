@@ -3,7 +3,7 @@
 let hotSearchKeyword = '';
 let hotPageNum = 1;
 const hotPageSize = 序0;
-let hotSalesData = []; // [{ sku, name, image_url, stock, price_cny, price_usd, total_qty }]
+var hotSalesData = []; // [{ sku, name, image_url, stock, price_cny, price_usd, total_qty }]
 
 // ===== 渲染热卖页 =====
 function renderHotPage(container) {

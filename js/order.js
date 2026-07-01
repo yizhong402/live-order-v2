@@ -204,7 +204,7 @@ async function addScannedSKU() {
 
   // 检查是否是组合码
   try {
-    const combos = await BaaS.list('combos');
+    const combos = await BaaS.list('combo_skus');
     const combo = combos?.find(c => c.code === sku);
     if (combo) {
       try {

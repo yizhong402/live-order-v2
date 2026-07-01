@@ -14,7 +14,7 @@ async function createSession(title, date, time, anchor) {
     start_time: nowISO(),
     created_at: nowISO()
   };
-  const result = await BaaS.insert('sessions', session);
+  const result = await BaaS.insert('live_sessions', session);
   session.id = typeof result === 'number' ? result : (result?.id || result);
   AppState.currentSession = session;
   Storage.set('current_session', session);
@@ -24,7 +24,7 @@ async function createSession(title, date, time, anchor) {
 // ===== 加载活跃场次 =====
 async function loadActiveSessions() {
   try {
-    const sessions = await BaaS.list('sessions', { filter: 'status|eq|active' });
+    const sessions = await BaaS.list('live_sessions', { filter: 'status|eq|active' });
     return sessions || [];
   } catch (e) {
     console.error('加载活跃场次失败:', e);
@@ -35,7 +35,7 @@ async function loadActiveSessions() {
 // ===== 加载所有场次（含已结束） =====
 async function loadAllSessions() {
   try {
-    return await BaaS.list('sessions', { orderBy: 'id', orderDir: 'desc' }) || [];
+    return await BaaS.list('live_sessions', { orderBy: 'id', orderDir: 'desc' }) || [];
   } catch (e) {
     console.error('加载场次列表失败:', e);
     return [];
@@ -55,7 +55,7 @@ async function selectSession(sessionId) {
       }
     } else {
       // fallback: list with filter
-      const list = await BaaS.list('sessions', { filter: `id|eq|${sessionId}` });
+      const list = await BaaS.list('live_sessions', { filter: `id|eq|${sessionId}` });
       if (list && list.length > 0) {
         AppState.currentSession = list[0];
       }
@@ -73,7 +73,7 @@ async function switchAnchor(newAnchor) {
   if (!AppState.currentSession) return;
   AppState.currentSession.current_anchor = newAnchor;
   try {
-    await BaaS.update('sessions', AppState.currentSession.id, {
+    await BaaS.update('live_sessions', AppState.currentSession.id, {
       current_anchor: newAnchor
     });
   } catch (e) {
@@ -89,7 +89,7 @@ async function updateRound(newRound) {
     AppState.currentSession.total_rounds = newRound;
   }
   try {
-    await BaaS.update('sessions', AppState.currentSession.id, {
+    await BaaS.update('live_sessions', AppState.currentSession.id, {
       current_round: newRound,
       total_rounds: AppState.currentSession.total_rounds
     });
@@ -103,7 +103,7 @@ async function endSession() {
   if (!AppState.currentSession) return;
   AppState.currentSession.status = 'ended';
   try {
-    await BaaS.update('sessions', AppState.currentSession.id, { status: 'ended' });
+    await BaaS.update('live_sessions', AppState.currentSession.id, { status: 'ended' });
     Storage.remove('current_session');
 AppState.currentSession = null;
   } catch (e) {

@@ -21,7 +21,7 @@ function renderComboPage(container) {
 // ===== 加载组合列表 =====
 async function loadComboList() {
   try {
-    const combos = await BaaS.list('combos') || [];
+    const combos = await BaaS.list('combo_skus') || [];
     renderComboTable(combos);
   } catch (e) {
     console.error('加载组合列表失败:', e);
@@ -75,7 +75,7 @@ async function toggleComboDetail(id) {
   if (detailRow.style.display === 'none' || detailRow.style.display === '') {
     detailRow.style.display = 'table-row';
     try {
-      const combos = await BaaS.list('combos', { filter: `id|eq|${id}` });
+      const combos = await BaaS.list('combo_skus', { filter: `id|eq|${id}` });
       if (!combos || combos.length === 0) return;
       const combo = combos[0];
       const skus = JSON.parse(combo.skus_json || '[]');
@@ -116,7 +116,7 @@ function showComboModal(id) {
   let codeInput = '';
   let preSelectedSkus = [];
   if (isEdit) {
-    BaaS.list('combos', { filter: `id|eq|${id}` }).then(result => {
+    BaaS.list('combo_skus', { filter: `id|eq|${id}` }).then(result => {
       if (result && result.length > 0) {
         const combo = result[0];
         document.getElementById('comboCodeInput').value = combo.code || '';
@@ -254,12 +254,12 @@ async function saveCombo() {
 
   try {
     if (editingComboId) {
-      await BaaS.update('combos', editingComboId, {
+      await BaaS.update('combo_skus', editingComboId, {
         code, skus_json: skusJson
       });
       showToast('组合已更新', 'success');
     } else {
-      await BaaS.insert('combos', {
+      await BaaS.insert('combo_skus', {
         code,
         skus_json: skusJson,
         created_at: nowISO()
@@ -278,7 +278,7 @@ async function saveCombo() {
 // ===== 编辑组合 =====
 async function editComboModal(id) {
   try {
-    const combos = await BaaS.list('combos', { filter: `id|eq|${id}` });
+    const combos = await BaaS.list('combo_skus', { filter: `id|eq|${id}` });
     if (!combos || combos.length === 0) return;
     const combo = combos[0];
     comboSelectedSkus = {};
@@ -296,7 +296,7 @@ async function editComboModal(id) {
 function deleteCombo(id) {
   showConfirm('删除组合', '确认删除该组合 SKU？', async () => {
     try {
-      await BaaS.delete('combos', id);
+      await BaaS.delete('combo_skus', id);
       showToast('组合已删除', 'success');
       loadComboList();
     } catch (e) {

@@ -136,7 +136,7 @@ async function loadHomeData() {
     // 并行加载数据
     const [products, sessions, orders] = await Promise.all([
       BaaS.list('products').then(d => d || []),
-      BaaS.list('sessions', { filter: 'status|eq|active' }).then(d => d || []),
+      BaaS.list('live_sessions', { filter: 'status|eq|active' }).then(d => d || []),
       BaaS.list('orders', { orderBy: 'id', orderDir: 'desc', limit: 20 }).then(d => d || [])
     ]);
 
