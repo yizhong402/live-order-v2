@@ -22,15 +22,12 @@ const BaaS = {
   async _request(body) {
     try {
       const url = new URL(this.baseURL);
-      // list/get: 参数全部放 URL query
-      // add/update/delete: table+method 放 URL query，数据字段平铺到 POST body
       const isWrite = body.method === 'add' || body.method === 'update' || body.method === 'delete';
       
       if (isWrite) {
-        // 提取 table、method 放 URL
+        // add/update/delete: table+method→URL query, 数据字段平铺 POST body
         url.searchParams.append('table', body.table);
         url.searchParams.append('method', body.method);
-        // 构建 POST body: 平铺 values 对象的字段 + id（如果有）
         const writeBody = {};
         if (body.id !== undefined) writeBody.id = body.id;
         if (body.values && typeof body.values === 'object') {
@@ -45,15 +42,16 @@ const BaaS = {
         return await res.json();
       }
 
-      // list/get: 所有参数放 URL query（GET）
+      // list/get: 参数→URL query，统一用 POST
       Object.keys(body).forEach(k => {
         if (body[k] !== null && body[k] !== undefined && typeof body[k] !== 'object') {
           url.searchParams.append(k, body[k]);
         }
       });
       const res = await fetch(url.toString(), {
-        method: 'GET',
-        headers: this.headers
+        method: 'POST',
+        headers: this.headers,
+        body: '{}'
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
