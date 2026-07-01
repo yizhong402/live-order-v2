@@ -21,23 +21,39 @@ const BaaS = {
 
   async _request(body) {
     try {
-      // BaaS: 标量参数→URL query，对象/数组参数→POST body
       const url = new URL(this.baseURL);
-      const postBody = {};
+      // list/get: 参数全部放 URL query
+      // add/update/delete: table+method 放 URL query，数据字段平铺到 POST body
+      const isWrite = body.method === 'add' || body.method === 'update' || body.method === 'delete';
+      
+      if (isWrite) {
+        // 提取 table、method 放 URL
+        url.searchParams.append('table', body.table);
+        url.searchParams.append('method', body.method);
+        // 构建 POST body: 平铺 values 对象的字段 + id（如果有）
+        const writeBody = {};
+        if (body.id !== undefined) writeBody.id = body.id;
+        if (body.values && typeof body.values === 'object') {
+          Object.keys(body.values).forEach(k => { writeBody[k] = body.values[k]; });
+        }
+        const res = await fetch(url.toString(), {
+          method: 'POST',
+          headers: this.headers,
+          body: JSON.stringify(writeBody)
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      }
+
+      // list/get: 所有参数放 URL query（GET）
       Object.keys(body).forEach(k => {
-        const v = body[k];
-        if (v !== null && v !== undefined) {
-          if (typeof v === 'object') {
-            postBody[k] = v;
-          } else {
-            url.searchParams.append(k, v);
-          }
+        if (body[k] !== null && body[k] !== undefined && typeof body[k] !== 'object') {
+          url.searchParams.append(k, body[k]);
         }
       });
       const res = await fetch(url.toString(), {
-        method: 'POST',
-        headers: this.headers,
-        body: JSON.stringify(Object.keys(postBody).length > 0 ? postBody : {})
+        method: 'GET',
+        headers: this.headers
       });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       return await res.json();
@@ -67,7 +83,7 @@ const BaaS = {
 
   // ===== 插入 =====
   async insert(table, values) {
-    const result = await this._request({ table, method: 'insert', values });
+    const result = await this._request({ table, method: 'add', values });
     if (result.code !== 0) throw new Error(`BaaS insert failed: ${result.message}`);
     return result.data;
   },
